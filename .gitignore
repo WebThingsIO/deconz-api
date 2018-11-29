@@ -1,0 +1,6 @@
+*.swp
+*.tgz
+*~
+SHA256SUMS
+node_modules
+yarn-error.log

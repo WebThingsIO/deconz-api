@@ -1,0 +1,40 @@
+{
+  "name": "deconz-api",
+  "version": "1.0.0",
+  "description": "Talk to Zigbee devices using ConBee dongle or RaspBee HAT, modelled after xbee-api ",
+  "main": "lib/deconz-api",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla-iot/deconz-api.git"
+  },
+  "keywords": [
+    "zigbee",
+    "conbee",
+    "raspbee",
+    "deconz"
+  ],
+  "author": "Mozilla IoT",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/mozilla-iot/deconz-api/issues"
+  },
+  "homepage": "https://github.com/mozilla-iot/deconz-api#readme",
+  "dependencies": {
+    "buffer-builder": "^0.2.0",
+    "buffer-events": "0.0.2",
+    "buffer-reader": "^0.1.0"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "command-line-args": "^5.0.2",
+    "serialport": "^7.1.0",
+    "zcl-packet": "dhylands/zcl-packet#add-genOta-meta",
+    "zigbee-zdo": "git+https://github.com/mozilla-iot/zigbee-zdo.git"
+  }
+}
