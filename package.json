@@ -34,6 +34,7 @@
     "assert": "^1.4.1",
     "command-line-args": "^5.0.2",
     "serialport": "^7.1.0",
+    "zcl-id": "^0.4.0",
     "zcl-packet": "dhylands/zcl-packet#add-genOta-meta",
     "zigbee-zdo": "git+https://github.com/mozilla-iot/zigbee-zdo.git"
   }
