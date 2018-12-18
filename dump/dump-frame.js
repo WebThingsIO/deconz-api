@@ -124,7 +124,7 @@ function dumpZclPayload(label, frame) {
       for (const attrEntry of frame.zcl.payload) {
         const attrId = attrEntry.attrId;
         const attr = zclId.attr(clusterId, attrId);
-        const attrIdStr = `    ${attrId}`.slice(-5);
+        const attrIdStr = attrId.toString().padStart(5, ' ');
         let s = `${attrIdStr}:${attr ? attr.key : '???'}`;
         if (attrEntry.hasOwnProperty('status')) {
           const status = zclId.status(attrEntry.status);

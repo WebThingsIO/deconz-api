@@ -106,10 +106,10 @@ class DeconzTest {
   dumpParameters() {
     for (const paramId of PARAM) {
       const param = C.PARAM_ID[paramId];
-      const label = `                    ${param.label}`.slice(-20);
+      const label = param.label.padStart(20, ' ');
       let value = this[param.fieldName];
       if (paramId == C.PARAM_ID.SCAN_CHANNELS) {
-        value = `00000000${value.toString(16)}`.slice(-8);
+        value = value.toString(16).padStart(8, '0');
       }
       console.log(`${label}: ${value}`);
     }

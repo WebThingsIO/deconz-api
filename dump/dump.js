@@ -41,7 +41,7 @@ function calcCrc(buffer, len) {
 }
 
 function hexStr(number, width) {
-  return `00000000${number.toString(16)}`.slice(-width);
+  return number.toString(16).padStart(width, '0');
 }
 
 function isZclFrame(frame) {
@@ -64,8 +64,8 @@ function onPacket(packet, params) {
     console.error(params.label, packet);
     return;
   }
-  let label = `     ${params.timeStamp}`.slice(-9);
-  label += `     ${params.frameNum}`.slice(-6);
+  let label = params.timeStamp.toString().padStart(9, ' ');
+  label += params.frameNum.toString().padStart(6, ' ');
   label += ` ${params.label}`;
   if (DEBUG_rawFrames) {
     console.log(label, packet);
