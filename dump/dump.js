@@ -10,7 +10,6 @@
 'use strict';
 
 const commandLineArgs = require('command-line-args');
-const zclId = require('zcl-id');
 const zcl = require('zcl-packet');
 const zdo = require('zigbee-zdo');
 
