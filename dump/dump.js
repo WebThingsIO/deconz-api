@@ -85,13 +85,23 @@ function onPacket(packet, params) {
       frame.zcl = zclData;
       dumpFrame(label, frame, DEBUG_frameDetail);
     });
-    dumpFrame(label, frame, DEBUG_frameDetail);
   } else {
     dumpFrame(label, frame, DEBUG_frameDetail);
   }
 }
 
+function doPacket(packetStr, params) {
+  // Strip spaces from packetStr
+  packetStr = packetStr.replace(/\s+/g, '');
+  const packet = new Buffer(packetStr, 'hex');
+  params.timeStamp = 0;
+  params.frameNum = 1;
+  onPacket(packet, params);
+}
+
 const optionsDefs = [
+  {name: 'readPacket', alias: 'p', type: String},
+  {name: 'writePacket', alias: 'w', type: String},
   {name: 'raw', alias: 'r', type: Boolean},
   {name: 'detail', alias: 'd', type: Boolean},
   {name: 'json', alias: 'j', type: String, defaultOption: true},
@@ -101,34 +111,40 @@ const options = commandLineArgs(optionsDefs);
 DEBUG_rawFrames = options.raw;
 DEBUG_frameDetail = options.detail;
 
-let json;
-try {
-  json = require(`./${options.json}`);
-} catch (error) {
-  console.log('Error parsing JSON file:', options.json);
-  console.log(error);
-  process.exit();
-}
+if (options.readPacket) {
+  doPacket(options.readPacket, {read: true, label: 'Rcvd:'});
+} else if (options.writePacket) {
+  doPacket(options.readPacket, {read: false, label: 'Sent:'});
+} else {
+  let json;
+  try {
+    json = require(`./${options.json}`);
+  } catch (error) {
+    console.log('Error parsing JSON file:', options.json);
+    console.log(error);
+    process.exit();
+  }
 
-for (const packet of json) {
-  const layer = packet._source.layers;
-  const frameNum = layer.frame['frame.number'];
-  const timeStamp = layer.frame['frame.time_relative'].slice(0, -6);
-  const usb = layer.usb;
-  const data = layer['usb.capdata'].replace(/:/g, '');
+  for (const packet of json) {
+    const layer = packet._source.layers;
+    const frameNum = layer.frame['frame.number'];
+    const timeStamp = layer.frame['frame.time_relative'].slice(0, -6);
+    const usb = layer.usb;
+    const data = layer['usb.capdata'].replace(/:/g, '');
 
-  const read = usb['usb.dst'] === 'host';
-  if (read) {
-    if (data.length == 4) {
-      continue;
+    const read = usb['usb.dst'] === 'host';
+    if (read) {
+      if (data.length == 4) {
+        continue;
+      }
+      // Strip the first two characters (FTDI status bytes).
+      readSlip.params.timeStamp = timeStamp;
+      readSlip.params.frameNum = frameNum;
+      readSlip.parseChunk(Buffer.from(data.slice(4), 'hex'));
+    } else {
+      writeSlip.params.timeStamp = timeStamp;
+      writeSlip.params.frameNum = frameNum;
+      writeSlip.parseChunk(Buffer.from(data, 'hex'));
     }
-    // Strip the first two characters (FTDI status bytes).
-    readSlip.params.timeStamp = timeStamp;
-    readSlip.params.frameNum = frameNum;
-    readSlip.parseChunk(Buffer.from(data.slice(4), 'hex'));
-  } else {
-    writeSlip.params.timeStamp = timeStamp;
-    writeSlip.params.frameNum = frameNum;
-    writeSlip.parseChunk(Buffer.from(data, 'hex'));
   }
 }
