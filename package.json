@@ -1,6 +1,6 @@
 {
   "name": "deconz-api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Talk to Zigbee devices using ConBee dongle or RaspBee HAT, modelled after xbee-api ",
   "main": "lib/deconz-api",
   "directories": {
