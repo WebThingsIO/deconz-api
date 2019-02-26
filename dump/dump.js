@@ -114,7 +114,7 @@ DEBUG_frameDetail = options.detail;
 if (options.readPacket) {
   doPacket(options.readPacket, {read: true, label: 'Rcvd:'});
 } else if (options.writePacket) {
-  doPacket(options.readPacket, {read: false, label: 'Sent:'});
+  doPacket(options.writePacket, {read: false, label: 'Sent:'});
 } else {
   let json;
   try {
