@@ -148,6 +148,11 @@ function dumpZclPayload(label, frame) {
 }
 
 function dumpZigbeeRxFrame(label, frame) {
+  if (frame.status != 0) {
+    console.log(label, 'Read Received Data ERROR:',
+                frame.status, C.STATUS_STR[frame.status]);
+    return;
+  }
   const cluster = zclId.cluster(parseInt(frame.clusterId, 16));
   const clusterKey = cluster && cluster.key || '???';
   const remoteAddr = frame.remote64 || frame.remote16;
