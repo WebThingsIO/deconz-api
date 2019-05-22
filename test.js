@@ -200,7 +200,8 @@ class DeconzTest {
 }
 
 function isConBeePort(port) {
-  return (port.vendorId === '0403' &&
+  return (port.vendorId == '1cf1' && port.productId == '0030') ||
+         (port.vendorId === '0403' &&
           (port.productId === '6015' || port.productId === '6001') &&
           port.manufacturer === 'FTDI');
 }
