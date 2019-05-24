@@ -129,6 +129,11 @@ class DeconzTest {
     if (frame.type == C.FRAME_TYPE.APS_DATA_INDICATION ||
         frame.type == C.FRAME_TYPE.APS_DATA_CONFIRM) {
       this.deviceStateUpdateInProgress = false;
+      if (frame.type == C.FRAME_TYPE.APS_DATA_CONFIRM &&
+          frame.hasOwnProperty('confirmStatus') &&
+          frame.confirmStatus != 0) {
+        console.error('#### Confirm Status:', frame.confirmStatus, '#####');
+      }
     }
 
     if (!this.deviceStateUpdateInProgress) {
@@ -177,10 +182,12 @@ class DeconzTest {
         if (frame.numEntries > 0) {
           this.sendFrame(this.zdo.makeFrame({
             destination64: frame.neighbors[0].addr64,
+            destination16: 'fffc',
             clusterId: zdo.CLUSTER_ID.NETWORK_ADDRESS_REQUEST,
             addr64: frame.neighbors[0].addr64,
             requestType: 0,
             startIndex: 0,
+            options: 0,
           }));
         } else {
           setTimeout(() => {
