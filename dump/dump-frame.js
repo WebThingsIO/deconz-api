@@ -70,7 +70,11 @@ function dumpFrame(label, frame, dumpFrameDetail) {
         console.log(label, 'Read Received Data (APS Data Indication) Request');
         break;
       }
-      dumpZigbeeRxFrame(label, frame);
+      if (frame.status == 0) {
+        dumpZigbeeRxFrame(label, frame);
+      } else {
+        console.error(label, 'Status:', frame.status);
+      }
       break;
     }
 

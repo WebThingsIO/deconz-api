@@ -155,19 +155,47 @@ class DeconzTest {
         this.paramIdx++;
         if (this.paramIdx == PARAM.length) {
           this.dumpParameters();
-          this.sendFrame(this.zdo.makeFrame({
-            destination64: this.macAddress,
-            destination16: '0000',
-            clusterId: zdo.CLUSTER_ID.MANAGEMENT_LQI_REQUEST,
-            startIndex: 0,
-          }));
+          this.sendFrame({
+            type: C.FRAME_TYPE.VERSION,
+          });
         } else {
           this.readParameter(this.paramIdx);
         }
       }
+    } else if (frame.type == C.FRAME_TYPE.VERSION) {
+      this.sendFrame(this.zdo.makeFrame({
+        destination64: this.macAddress,
+        destination16: '0000',
+        clusterId: zdo.CLUSTER_ID.MANAGEMENT_LQI_REQUEST,
+        startIndex: 0,
+      }));
     } else if (frame.type == C.FRAME_TYPE.APS_DATA_INDICATION) {
-      console.log('Demo completed');
-      this.serialport.close();
+      const clusterId = parseInt(frame.clusterId, 16);
+      if (clusterId == zdo.CLUSTER_ID.MANAGEMENT_LQI_RESPONSE) {
+        if (frame.numEntries > 0) {
+          this.sendFrame(this.zdo.makeFrame({
+            destination64: frame.neighbors[0].addr64,
+            clusterId: zdo.CLUSTER_ID.NETWORK_ADDRESS_REQUEST,
+            addr64: frame.neighbors[0].addr64,
+            requestType: 0,
+            startIndex: 0,
+          }));
+        } else {
+          setTimeout(() => {
+            if (this.serialport.isOpen) {
+              console.log('Demo completed');
+              this.serialport.close();
+            }
+          }, 1000);
+        }
+      } else {
+        setTimeout(() => {
+          if (this.serialport.isOpen) {
+            console.log('Demo completed');
+            this.serialport.close();
+          }
+        }, 1000);
+      }
     }
   }
 
@@ -189,7 +217,7 @@ class DeconzTest {
 
   sendFrame(frame) {
     if (DEBUG_frames) {
-      dumpFrame('Sent:', frame);
+      dumpFrame('Sent:', frame, DEBUG_frameDetail);
     }
     const rawFrame = this.dc.buildFrame(frame);
     if (DEBUG_rawFrames) {
