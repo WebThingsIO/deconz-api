@@ -131,19 +131,21 @@ class DeconzTest {
       this.deviceStateUpdateInProgress = false;
     }
 
-    if (frame.hasOwnProperty('dataConfirm') && frame.dataConfirm) {
-      // There's a send confirmation ready to be read
-      this.deviceStateUpdateInProgress = true;
-      this.sendFrame({
-        type: C.FRAME_TYPE.APS_DATA_CONFIRM,
-      });
-    } else if (!this.deviceStateUpdateInProgress) {
-      if (frame.hasOwnProperty('dataIndication') && frame.dataIndication) {
-        // There's a frame ready to be read.
+    if (!this.deviceStateUpdateInProgress) {
+      if (frame.hasOwnProperty('dataConfirm') && frame.dataConfirm) {
+        // There's a send confirmation ready to be read
         this.deviceStateUpdateInProgress = true;
         this.sendFrame({
-          type: C.FRAME_TYPE.APS_DATA_INDICATION,
+          type: C.FRAME_TYPE.APS_DATA_CONFIRM,
         });
+      } else if (!this.deviceStateUpdateInProgress) {
+        if (frame.hasOwnProperty('dataIndication') && frame.dataIndication) {
+          // There's a frame ready to be read.
+          this.deviceStateUpdateInProgress = true;
+          this.sendFrame({
+            type: C.FRAME_TYPE.APS_DATA_INDICATION,
+          });
+        }
       }
     }
 
