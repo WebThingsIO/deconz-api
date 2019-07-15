@@ -1,6 +1,6 @@
 {
   "name": "deconz-api",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Talk to Zigbee devices using ConBee dongle or RaspBee HAT, modelled after xbee-api ",
   "main": "lib/deconz-api",
   "directories": {
@@ -33,9 +33,9 @@
   },
   "devDependencies": {
     "assert": "^1.5.0",
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "command-line-args": "^5.1.1",
-    "eslint": "^5.12.1",
+    "eslint": "^6.0.1",
     "serialport": "^7.1.5",
     "zcl-id": "github:dhylands/zcl-id#moziot-changes",
     "zcl-packet": "github:dhylands/zcl-packet#moziot-changes",
